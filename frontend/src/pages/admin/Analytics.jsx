@@ -36,6 +36,12 @@ const Analytics = () => {
 
     return (
         <DashboardLayout>
+            {!analytics && (
+                <div className="rounded-xl bg-white p-8 text-center">
+                    No analytics available
+                </div>
+            )}
+            
             <h1 className="mb-6 text-3xl font-bold">
                 Analytics
             </h1>

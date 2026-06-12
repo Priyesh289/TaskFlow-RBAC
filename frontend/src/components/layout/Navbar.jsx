@@ -1,8 +1,15 @@
 import { Menu } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ setIsOpen }) => {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
 
     return (
         <header className="flex h-16 items-center justify-between border-b bg-white px-4">
@@ -25,7 +32,7 @@ const Navbar = ({ setIsOpen }) => {
                 </div>
 
                 <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
                 >
                     Logout

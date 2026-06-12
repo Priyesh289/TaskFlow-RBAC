@@ -7,7 +7,9 @@ import Register from "./pages/auth/Register";
 import Dashboard from "./pages/user/Dashboard";
 import Users from "./pages/admin/Users";
 import Analytics from "./pages/admin/Analytics";
-
+import Tasks from "./pages/admin/Tasks";
+import ActivityLogs from "./pages/admin/ActivityLogs";
+import UserTasks from './pages/user/Tasks'
 
 function App() {
   return (
@@ -15,12 +17,18 @@ function App() {
       <Routes>
         <Route
           path="/login"
-          element={<Login />}
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
         />
 
         <Route
           path="/register"
-          element={<Register />}
+          element={<PublicRoute>
+            <Register />
+          </PublicRoute>}
         />
 
         <Route
@@ -29,6 +37,12 @@ function App() {
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tasks"
+          element={
+            <UserTasks />
           }
         />
         <Route
@@ -47,7 +61,25 @@ function App() {
             </AdminRoute>
           }
         />
+        <Route
+          path="/admin/tasks"
+          element={
+            <AdminRoute>
+              <Tasks />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/activity-logs"
+          element={
+            <AdminRoute>
+              <ActivityLogs />
+            </AdminRoute>
+          }
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 }
