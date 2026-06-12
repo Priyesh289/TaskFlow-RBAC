@@ -10,6 +10,7 @@ import Analytics from "./pages/admin/Analytics";
 import Tasks from "./pages/admin/Tasks";
 import ActivityLogs from "./pages/admin/ActivityLogs";
 import UserTasks from './pages/user/Tasks'
+import PublicRoute from "./routes/PublicRoute";
 
 function App() {
   return (
