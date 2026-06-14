@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import toast from "react-hot-toast";
+
 import {
     createTask,
     getMyTasks,
@@ -7,44 +8,69 @@ import {
     updateTask,
 } from "../../services/task.service";
 import DashboardLayout from '../../layouts/DashboardLayout';
+import { useTask } from '../../context/TaskContext';
+import { useAuth } from '../../context/AuthContext';
 
 const UserTasks = () => {
-    const [tasks, setTasks] = useState([]);
+    const [taskStatus, setTaskStatus] = useState('Pending')
+    const { navigate } = useAuth();
 
-    const [title, setTitle] = useState("");
-
-    const [description, setDescription] = useState("");
+    const {
+        tasks, setTasks, title, setTitle,
+        description, setDescription, editTaskId, setEditTaskId, fetchTasks
+    } = useTask()
 
     useEffect(() => {
         fetchTasks();
     }, []);
 
-    const fetchTasks = async () => {
-        try {
-            const { data } =
-                await getMyTasks();
+    const handleEditTask =
+        async (task) => {
+            setEditTaskId(task._id)
+            setTitle(task.title);
+            setDescription(task.description)
+            navigate('/create-task')
+        };
 
-            setTasks(data.tasks);
+    const updateStatus = async (e, task) => {
+        try {
+            await updateTask(task._id, {
+                status: e.target.value
+            });
+
+            fetchTasks();
         } catch (error) {
-            console.log(error);
+            console.log(error.response?.data);
         }
     };
+
     const handleCreateTask =
         async (e) => {
             e.preventDefault();
 
             try {
-                await createTask({
-                    title,
-                    description,
-                });
+                if (editTaskId) {
+                    await updateTask(editTaskId, {
+                        title,
+                        description
+                    })
+                    toast.success('update task')
+                } else {
+
+                    await createTask({
+                        title,
+                        description,
+                    });
+
+                    toast.success(
+                        "Task created"
+                    );
+
+                }
 
                 setTitle("");
                 setDescription("");
-
-                toast.success(
-                    "Task created"
-                );
+                setEditTaskId(null)
 
                 fetchTasks();
             } catch (error) {
@@ -53,6 +79,8 @@ const UserTasks = () => {
                 );
             }
         };
+
+
     const handleDeleteTask =
         async (taskId) => {
             try {
@@ -69,60 +97,10 @@ const UserTasks = () => {
                 );
             }
         };
-    const handleEditTask =
-        async (task) => {
-            const title =
-                window.prompt(
-                    "Title",
-                    task.title
-                );
 
-            if (!title) return;
-
-            await updateTask(
-                task._id,
-                {
-                    title,
-                }
-            );
-
-            fetchTasks();
-        };
     return (
         <DashboardLayout>
             <div>
-
-                <form
-                    onSubmit={handleCreateTask}
-                    className="mb-8 rounded-xl bg-white p-6 shadow"
-                >
-                    <input
-                        type="text"
-                        placeholder="Task title"
-                        value={title}
-                        onChange={(e) =>
-                            setTitle(e.target.value)
-                        }
-                        className="mb-3 w-full rounded border p-3"
-                    />
-
-                    <textarea
-                        placeholder="Description"
-                        value={description}
-                        onChange={(e) =>
-                            setDescription(
-                                e.target.value
-                            )
-                        }
-                        className="mb-3 w-full rounded border p-3"
-                    />
-
-                    <button type='submit'
-                        className="rounded bg-blue-600 px-4 py-2 text-white"
-                    >
-                        Create Task
-                    </button>
-                </form>
 
                 {tasks.length === 0 && (
                     <div className="rounded-xl bg-white p-10 text-center">
@@ -135,27 +113,39 @@ const UserTasks = () => {
                         </p>
                     </div>
                 )}
-                
-                <div className="grid gap-4">
+
+                <div className="grid gap-4 ">
                     {tasks.map((task) => (
                         <div
                             key={task._id}
-                            className="rounded-xl bg-white p-5 shadow"
-                        >
-                            <h3 className="text-lg font-bold">
-                                {task.title}
-                            </h3>
+                            className="rounded-xl bg-white p-5 shadow
+                             flex justify-between items-center"
+                        ><div>
+                                <h3 className="text-lg font-bold">
+                                    {task.title}
+                                </h3>
 
-                            <p className="mt-2 text-gray-600">
-                                {task.description}
-                            </p>
+                                <p className="mt-2 text-gray-600">
+                                    {task.description}
+                                </p>
 
-                            <p className="mt-3">
-                                Status:
-                                <span className="ml-2 font-semibold">
-                                    {task.status}
-                                </span>
-                            </p><div className="mt-4 flex justify-end gap-2">
+                                <p className="mt-3">
+                                    Status:
+                                    <span className="ml-2 font-semibold">
+                                        {task.status}
+                                    </span>
+                                </p>
+                            </div>
+                            <div className="mt-4 flex justify-end gap-2">
+                                <select
+                                    value={task.status}
+                                    onChange={(e) => updateStatus(e, task)}
+                                    className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm
+                                       focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                >
+                                    <option value="Pending">Pending</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
                                 <button
                                     onClick={() =>
                                         handleEditTask(task)

@@ -3,7 +3,7 @@ import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import toast from "react-hot-toast";
 
 import { loginUser } from "../../services/auth.service";
@@ -11,14 +11,14 @@ import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
 
-    const { login } = useAuth();
+    const { login, navigate } = useAuth();
 
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
 
-    const navigate = useNavigate();
+
 
     const handleChange = (e) => {
         setFormData({

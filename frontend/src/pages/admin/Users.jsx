@@ -118,7 +118,7 @@ const Users = () => {
                         </tr>
                     </thead>
 
-                    <tbody className="md:hidden space-y-4">
+                    <tbody className=" space-y-4">
                         {users.map((user) => (
                             <tr
                                 key={user._id}

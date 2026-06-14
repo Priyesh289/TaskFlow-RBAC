@@ -10,6 +10,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             path: "/dashboard",
         },
         {
+            name: "Create Task",
+            path: "/create-task",
+        },
+        {
             name: "My Tasks",
             path: "/tasks",
         },

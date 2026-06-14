@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, } from "react-router-dom";
+import {  Routes, Route, } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 import AdminRoute from "./routes/AdminRoute";
@@ -11,10 +11,11 @@ import Tasks from "./pages/admin/Tasks";
 import ActivityLogs from "./pages/admin/ActivityLogs";
 import UserTasks from './pages/user/Tasks'
 import PublicRoute from "./routes/PublicRoute";
+import CreateTask from "./pages/user/CreateTask";
 
 function App() {
   return (
-    <BrowserRouter>
+    
       <Routes>
         <Route
           path="/login"
@@ -44,6 +45,12 @@ function App() {
           path="/tasks"
           element={
             <UserTasks />
+          }
+        />
+        <Route
+          path="/create-task"
+          element={
+            <CreateTask />
           }
         />
         <Route
@@ -81,7 +88,7 @@ function App() {
 
       </Routes>
 
-    </BrowserRouter>
+   
   );
 }
 

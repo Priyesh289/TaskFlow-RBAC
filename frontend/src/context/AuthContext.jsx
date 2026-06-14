@@ -1,9 +1,12 @@
 import { createContext, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    
+
+    const navigate = useNavigate();
+
     const [user, setUser] = useState(
         JSON.parse(localStorage.getItem("user"))
     );
@@ -30,9 +33,8 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider
             value={{
-                user,
-                login,
-                logout,
+                user, login, logout, navigate,
+                
             }}
         >
             {children}
